@@ -5,8 +5,8 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 
 //requiring Note and Article models
-var Note = require("./models/notes.js");
-var Articles = require("./models/articles.js");
+//var Note = require("./models/note.js");
+var Article = require("./models/article.js");
 //our scraping tools
 var request = require("request");
 var cheerio = require("cheerio");
@@ -43,14 +43,17 @@ db.once("open", function() {
 
 //a GET request to scrape the rawstory website
 app.get("/scrape", function(req, res) {
-    request("", function(error, response, html) {
+    request("http://www.rawstory.com/", function(error, response, html) {
         var $ = cheerio.load(html);
-        $("").each(function(i, element) {
+        
+        $("div.recent-post-widget").each(function(i, element) {
 
             var result = {};
             //add the text and href of every link, and save them as properties of the result object
-            result.title = $(this)...
-            result.link = $(this)...
+            result.title = $(this).find("div.recent-post-widget-title").text().trim();
+            result.link = $(this).find("div.recent-post-widget-title").find("a").attr("href");
+            result.image = $(this).find("a").find("img").attr("src");
+                console.log(result);
 
             //using out article model, create a new entry
             var entry = new Article(result);
@@ -63,9 +66,15 @@ app.get("/scrape", function(req, res) {
                 else {
                     console.log(doc);
                 }
-            });
+            });           
         });
     });
     //send finished message
     res.send("scrape complete");
+    console.log("scape complete");
+});
+
+//listen on port 3000
+app.listen(3000, function() {
+    console.log("app is running on port 3000");
 });
