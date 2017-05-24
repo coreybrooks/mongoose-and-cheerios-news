@@ -5,7 +5,7 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 
 //requiring Note and Article models
-//var Note = require("./models/note.js");
+var Note = require("./models/note.js");
 var Article = require("./models/article.js");
 //our scraping tools
 var request = require("request");
@@ -21,6 +21,11 @@ app.use(logger("dev"));
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+
+var exphbs = require("express-handlebars"); 
+
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 //make public a static dir
 app.use(express.static("public"));
@@ -69,9 +74,64 @@ app.get("/scrape", function(req, res) {
             });           
         });
     });
-    //send finished message
-    res.send("scrape complete");
-    console.log("scape complete");
+    res.redirect("/articles");
+});
+
+//redirect root route to display articles in database
+app.get("/", function(req, res) {
+    res.redirect("/articles");
+});
+
+//route to get the articles we scraped from MongoDB
+app.get("/articles", function(req, res) {
+    Article.find({}).sort({_id:-1}).exec(function(error, doc) {
+        if (error) {
+            console.log(error);
+        }
+        else {
+            res.render("index", {article: doc});
+        }
+    });
+});
+
+//grab an article by it's ObjectId and populate notes
+app.get("/articles/:id", function(req, res) {
+    Article.findOne({"_id": req.params.id}).populate("note")
+    .exec(function(error, doc) {
+        if (error) {
+            console.log(error);
+        }
+        else {
+            res.json(doc);
+            //res.render("index", {article: doc});
+        }
+    });
+});
+
+//create a new note
+app.post("/articles/:id", function(req, res) {
+    console.log(JSON.stringify(req.body.newComment));
+    var result = [];
+    result.body = req.body.newComment;
+    var newNote = new Note(result);
+
+    //save the new note in the db
+    newNote.save(function(error, doc) {
+        if (error) {
+            console.log(error);
+        }
+        else {
+            Article.findOneAndUpdate({"_id": req.params.id}, { $push: {"note" :doc._id}}, {new: true}, function(err, doc) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log(doc);
+                    res.redirect("/articles");
+                }
+            });
+        }
+    });
 });
 
 //listen on port 3000

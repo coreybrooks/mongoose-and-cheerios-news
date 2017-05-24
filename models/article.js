@@ -8,6 +8,8 @@ var ArticleSchema = new Schema({
     //title is a required string
     title: {
         type: String,
+        trim: true,
+        unique: true,
         required: true
     },
     //link is a required string
@@ -21,10 +23,10 @@ var ArticleSchema = new Schema({
         required: true
     },
     //saves one note's ObjectId, refers to the Note Model
-    note: {
+    note: [{
         type: Schema.Types.ObjectId,
         ref: "Note"
-    } 
+    }] 
 });
 
 // create the Article model with the  ArticleSchema

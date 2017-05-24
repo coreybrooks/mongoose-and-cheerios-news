@@ -1,0 +1,33 @@
+<div class="container main-container eachArticle">    
+		<div class="text-center" id="top-bar">
+			<h1> Corey's News! </h1>
+            <a href="/scrape">refresh articles</a>
+		</div>
+        <div class="row">
+            {{#each article}}
+            <hr>
+            <div class="col-xs-10">
+                <h5>{{this.title}}</h5>
+                <h6>link to full story: <a href="{{this.link}}">{{this.link}}</a></h6>					
+            </div>
+            <div class="col-xs-2">
+                <img src="{{this.image}}">
+            </div>
+            <div>
+                <form method="POST" action="/articles/{{this.id}}" id="commentForm">
+                    <input type="text" class="form-control" name="newComment" value="Enter your comment" id="comment"><br>
+                    <button type="submit" class="btn btn-success" id="submitComment">SUBMIT COMMENT</button>
+                </form>
+                <form method="GET" action="/articles/{{this.id}}" id="commentForm">
+                    <button type="submit" class="btn btn-default" id="viewComments">VIEW COMMENTS</button>
+                </form>
+            </div>
+            <div>
+                {{#if this.note}}
+                <h5>comments: </h5> 
+                <p>{{this.note}}</p5>
+                {{/if}}
+            </div>
+            {{/each}}
+	</div>
+</div>
