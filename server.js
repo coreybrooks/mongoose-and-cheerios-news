@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 
+//handlebars setup
 var exphbs = require("express-handlebars"); 
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -44,7 +45,7 @@ db.once("open", function() {
     console.log("mongoose connection was successful");
 });
 
-//routes
+//**************** routes ****************
 
 //a GET request to scrape the rawstory website
 app.get("/scrape", function(req, res) {
@@ -83,27 +84,32 @@ app.get("/", function(req, res) {
 });
 
 //route to get the articles we scraped from MongoDB
+//display most recent article first
 app.get("/articles", function(req, res) {
     Article.find({}).sort({_id:-1}).exec(function(error, doc) {
         if (error) {
             console.log(error);
         }
         else {
+            console.log(doc);
             res.render("index", {article: doc});
         }
     });
 });
 
 //grab an article by it's ObjectId and populate notes
-app.get("/articles/:id", function(req, res) {
+app.get("/:id", function(req, res) {
     Article.findOne({"_id": req.params.id}).populate("note")
-    .exec(function(error, doc) {
+    .exec(function(error, docNotes) {
         if (error) {
             console.log(error);
         }
         else {
-            res.json(doc);
-            //res.render("index", {article: doc});
+            var notes = docNotes.note;
+            console.log("docNotes: " + docNotes);
+            console.log("notes: " + JSON.stringify(notes));
+            console.log("mainId: " + docNotes._id);
+            res.render("index2", {article: docNotes, note: notes, mainId: docNotes._id});
         }
     });
 });
@@ -127,9 +133,23 @@ app.post("/articles/:id", function(req, res) {
                 }
                 else {
                     console.log(doc);
-                    res.redirect("/articles");
+                    res.redirect("/" + req.params.id);
                 }
             });
+        }
+    });
+});
+
+//delete selected note
+app.post("/delete/:id", function(req, res) {
+    console.log("req.body: " + JSON.stringify(req.body));
+    Note.remove({_id: req.params.id}, function(err) {
+        if (err) {
+            return handleError(err);
+        }
+        else {
+            console.log("document removed");
+            res.redirect("/" + req.body.id);
         }
     });
 });

@@ -1,31 +1,31 @@
 <div class="container main-container eachArticle">    
 		<div class="text-center" id="top-bar">
-			<h1> Corey's News! </h1>
-            <a href="/scrape">refresh articles</a>
+			<h1> Corey's Daily Press </h1><br>
 		</div>
+   		<a href="/"><i class="fa fa-home" aria-hidden="true"></i> reload page | </a>
+   		<a href="/scrape"><i class="fa fa-refresh" aria-hidden="true"></i> refresh articles</a>
+           
         <div class="row">
             {{#each article}}
             <hr>
             <div class="col-xs-10">
                 <h5>{{this.title}}</h5>
-                <h6>link to full story: <a href="{{this.link}}">{{this.link}}</a></h6>					
+                <a href="{{this.link}}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> get the full story</a><br><br>
             </div>
             <div class="col-xs-2">
-                <img src="{{this.image}}">
+                <img class="images" src="{{this.image}}">
             </div>
             <div>
                 <form method="POST" action="/articles/{{this.id}}" id="commentForm">
                     <input type="text" class="form-control" name="newComment" value="Enter your comment" id="comment"><br>
                     <button type="submit" class="btn btn-success" id="submitComment">SUBMIT COMMENT</button>
                 </form>
-                <form method="GET" action="/articles/{{this.id}}" id="commentForm">
-                    <button type="submit" class="btn btn-default" id="viewComments">VIEW COMMENTS</button>
-                </form>
             </div>
             <div>
                 {{#if this.note}}
-                <h5>comments: </h5> 
-                <p>{{this.note}}</p5>
+                    <form method="GET" action="/{{this.id}}" id="commentForm">
+                        <button type="submit" class="btn btn-default" id="viewComments">VIEW COMMENTS</button>
+                    </form>
                 {{/if}}
             </div>
             {{/each}}

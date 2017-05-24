@@ -1,0 +1,37 @@
+<div class="container main-container eachArticle">    
+		<div class="text-center" id="top-bar">
+			<h1> Corey's Daily Press </h1>
+		</div>
+		<a href="/"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+        <div class="row">
+            {{#each article}}
+                {{#if this.title}}
+                <hr>
+                <div class="col-xs-10">
+                    <h5>{{this.title}}</h5>
+                    <a href="{{this.link}}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> get the full story</a><br><br>
+                </div>
+                <div class="col-xs-2">
+                    <img src="{{this.image}}">
+                </div>
+                <div>
+                    <form method="POST" action="/articles/{{this._id}}" id="commentForm">
+                        <input type="text" class="form-control" name="newComment" value="Enter your comment" id="comment"><br>
+                        <button type="submit" class="btn btn-success" id="submitComment">SUBMIT COMMENT</button>
+                    </form>
+                </div>
+                <div id="commentSection">
+                    <h5>comments: </h5>
+                    {{#each note}}
+                    <form method="POST" action="/delete/{{this.id}}" id="commentForm">
+            		<a href="/"><button type="submit" class="btn-danger" name="id" value="{{../this._id}}"id="deleteComments">
+                    <i class="fa fa-close" aria-hidden="true"></i></button></a> 
+                    {{this.body}} 
+                    <hr>                  
+                    </form>
+                    {{/each}}
+                </div>
+                {{/if}}
+            {{/each}}
+	</div>
+</div>
