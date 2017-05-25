@@ -1,10 +1,10 @@
 # mongoose-and-cheerios-news
 ## aka Corey's News Scraper
 
-###Purpose
+### Purpose
 Corey's News Scraper scrapes the latest news from Rawstory and generates the headlines and photos with a link to the full story.  The user can create, view, and delete comments for each story.
 
-###Overview
+### Overview
 This application is a full stack website that utilizes Node.js, Express, MongoDB, Mongoose, Handlebars.js and Cheerio. 
 
 Node.js and Express are used to query and route data into the app and display the appropriate pages.  Cheerio is used to scrape the data from Rawstory and the data is stored in MongoDB using Mongoose.
