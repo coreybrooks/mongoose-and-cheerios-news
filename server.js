@@ -32,7 +32,9 @@ app.set("view engine", "handlebars");
 app.use(express.static("public"));
 
 //database configuration with mongoose
-mongoose.connect("mongodb://localhost/mongooseCheeriosNews");
+//mongoose.connect("mongodb://localhost/mongooseCheeriosNews"); when using local
+mongoose.connect("mongodb://heroku_f1hp6r4t:2ip8oolrig8ghvdtajq4ctdopg@ds153521.mlab.com:53521/heroku_f1hp6r4t");
+
 var db = mongoose.connection;
 
 //show any mongoose errors
