@@ -1,5 +1,7 @@
 body {
-    background-color: #2e2e2e; 
+    width: 100%;
+    background-image: url("https://static.pexels.com/photos/1139/black-and-white-city-skyline-buildings.jpg");
+    background-position: center;
     padding: 10px;   
 }
 
