@@ -16,6 +16,9 @@ mongoose.Promise = Promise;
 //Initialize Express
 var app = express();
 
+//set an initial port
+var PORT = process.env.PORT || 8080;
+
 //use morgan and body parser with our app
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({
@@ -157,6 +160,6 @@ app.post("/delete/:id", function(req, res) {
 });
 
 //listen on port 3000
-app.listen(3000, function() {
-    console.log("app is running on port 3000");
+app.listen(PORT, function() {
+    console.log("app is listening on PORT: " + PORT);
 });
